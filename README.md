@@ -12,10 +12,11 @@ Set the following as your environment variables
 3. PRISMA_SECRET_KEY
 
 ## how to use 
-clone the repo locally 
-'git clone https://github.com/schnitz-air/repositories_last_scanned.git'
-cd into the directory 
-'cd repositories_last_scanned\'
-run the following using python (was tested using python version 3.12.3)
-'python prisma_cloud_repo_scanner.py --days 10'
+- clone the repo locally 
+`git clone https://github.com/schnitz-air/repositories_last_scanned.git`
+- cd into the directory 
+`cd repositories_last_scanned\`
+- run the following using python (was tested using python version 3.12.3)
+`python prisma_cloud_repo_scanner.py --days 10`
+
 In the above example, the script will return a list of all the repositories that haven't been scanned for the last 10 days or more 
