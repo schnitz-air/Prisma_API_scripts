@@ -2,9 +2,25 @@ import requests
 import json
 import datetime
 import argparse
+import logging
+import os 
 from dateutil.parser import parse
 
 def get_auth_token(api_url, username, password):
+    """
+    Retrieves an authentication token from the Prisma Cloud API.
+
+    Args:
+    api_url (str): The base URL of the Prisma Cloud API.
+    username (str): The username for authentication.
+    password (str): The password for authentication.
+
+    Returns:
+    str: The authentication token if successful.
+
+    Raises:
+    requests.exceptions.HTTPError: If the API request fails.
+    """
     login_url = f"{api_url}/login"
     headers = {
         "Content-Type": "application/json"
@@ -19,34 +35,36 @@ def get_auth_token(api_url, username, password):
 
 def get_repositories(api_url, auth_token, last_scanned_before):
     headers = {
-        "accept": "application/json; charset=UTF-8",
-        "content-type": "application/json",
+        'Accept': 'application/json',
         "Authorization": f"Bearer {auth_token}"
     }
 
     payload = {
-        "query": "config from source where source.lastScannedDate < '{}'".format(last_scanned_before.isoformat()),
-        "limit": 1000  # Adjust this value based on your needs
+        "data":{}
     }
 
     try:
-        response = requests.post(f"{api_url}/code/api/v1/repositories/search", headers=headers, json=payload)
+        logging.basicConfig(level=logging.DEBUG)
+        logging.debug(f"Request URL: {api_url}/code/api/v1/repositories")
+        logging.debug(f"Request Headers: {headers}")
+        logging.debug(f"Request Payload: {payload}")
+        response = requests.get(f"{api_url}/code/api/v1/repositories", headers=headers)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 403:
-            print("Error 403: Forbidden. Please check your API key and permissions.")
+            print(f"Error 403: Forbidden. Please check your API key and permissions.")
+            print(f"Response headers: {e.response.headers}")
+            print(f"Response body: {e.response.text}")
         else:
-            print(f"HTTP Error: {e}")
+            print(f"HTTP Error {e.response.status_code}: {e.response.text}")
     except requests.exceptions.RequestException as e:
         print(f"Request Error: {e}")
     return None
 
-import os
-
 def main():
     parser = argparse.ArgumentParser(description="List repositories in Prisma Cloud tenant last scanned before a given date.")
-    parser.add_argument("--days", type=int, default=30, help="Number of days to look back for last scan date (default: 30)")
+    parser.add_argument("--days", type=int, required=True, help="Number of days to look back for last scan date")
     
     args = parser.parse_args()
 
@@ -64,10 +82,11 @@ def main():
     
     if repositories:
         print(f"Repositories last scanned before {last_scanned_before.date()}:")
-        for repo in repositories:
-            last_scanned_date = parse(repo['lastScannedDate'])
-            print(f"- {repo['repository']} (Last scanned: {last_scanned_date.date()})")
-        print(f"\nTotal repositories found: {len(repositories)}")
+        filtered_repos = [repo for repo in repositories if repo['lastScanDate'] and parse(repo['lastScanDate']).date() < last_scanned_before.date()]
+        for repo in filtered_repos:
+            last_scanned_date = parse(repo['lastScanDate'])
+            print(f"- {repo['repository']} (Last scanned: {last_scanned_date.date()} source: {repo['source']})")
+        print(f"\nTotal repositories found: {len(filtered_repos)}")
     else:
         print("No repositories found or an error occurred.")
 
