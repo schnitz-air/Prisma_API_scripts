@@ -7,9 +7,9 @@ As stated above, this script gets the list of all repositories connected on a Pr
 Before starting, make sure you have a valid Prisma Cloud tenant and make sure to create an Access key and Secret key 
 
 Set the following as your environment variables 
-a. PRISMA_API_URL
-b. PRISMA_ACCESS_KEY
-c. PRISMA_SECRET_KEY
+1. PRISMA_API_URL
+2. PRISMA_ACCESS_KEY
+3. PRISMA_SECRET_KEY
 
 ## how to use 
 clone the repo locally 
