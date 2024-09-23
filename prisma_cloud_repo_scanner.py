@@ -5,33 +5,7 @@ import argparse
 import logging
 import os 
 from dateutil.parser import parse
-
-def get_auth_token(api_url, username, password):
-    """
-    Retrieves an authentication token from the Prisma Cloud API.
-
-    Args:
-    api_url (str): The base URL of the Prisma Cloud API.
-    username (str): The username for authentication.
-    password (str): The password for authentication.
-
-    Returns:
-    str: The authentication token if successful.
-
-    Raises:
-    requests.exceptions.HTTPError: If the API request fails.
-    """
-    login_url = f"{api_url}/login"
-    headers = {
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "username": username,
-        "password": password
-    }
-    response = requests.post(login_url, headers=headers, data=json.dumps(payload))
-    response.raise_for_status()
-    return response.json().get('token')
+from get_prisma_token import get_auth_token
 
 def get_repositories(api_url, auth_token, last_scanned_before):
     headers = {
@@ -82,7 +56,7 @@ def main():
     
     if repositories:
         print(f"Repositories last scanned before {last_scanned_before.date()}:")
-        filtered_repos = [repo for repo in repositories if repo['lastScanDate'] and parse(repo['lastScanDate']).date() < last_scanned_before.date()]
+        filtered_repos = [repo for repo in repositories if repo['lastScanDate'] and parse(repo['lastScanDate']).date() < last_scanned_before.date() and repo['source'] != 'cli']
         for repo in filtered_repos:
             last_scanned_date = parse(repo['lastScanDate'])
             print(f"- {repo['repository']} (Last scanned: {last_scanned_date.date()} source: {repo['source']})")
