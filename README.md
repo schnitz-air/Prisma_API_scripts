@@ -12,7 +12,7 @@ Set the following as your environment variables
 ## prisma_cloud_repo_scanner.py 
 This script gets the list of all repositories connected on a Prisma Cloud tenant and returns a list of repositories which were last scanned more than x days ago (x is a variable) 
 
-## how to use 
+### how to use 
 - clone the repo locally \
 &nbsp;&nbsp;&nbsp;&nbsp;`git clone https://github.com/schnitz-air/repositories_last_scanned.git`
 - cd into the created directory \
