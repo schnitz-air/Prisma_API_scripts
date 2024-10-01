@@ -33,3 +33,12 @@ You can modify the number of days you'd like the script to scan for
   &nbsp;&nbsp;&nbsp;&nbsp;`python prisma_cloud_pipeline_tools.py`
 
 In the above example, the script will return the list of changes (additions/deletions/modifications) that it detected between the current state of pipeline-tools and between the last state which is saved in the `prisma_pipeline_state.json` file.
+
+## set_prisma_repo_branches.py
+### This script allows you to set specific branches for scanning in Prisma Cloud for a given repository
+- run the following using python (was tested using python version 3.12.3)\
+      `python set_prisma_repo_branches.py --repo-name <repository_name> --branches <branch1> <branch2> ...`
+
+In the above example, replace `<repository_name>` with the name of your repository, and list the branches you want to set for scanning after the `--branches` argument. You can specify multiple branches separated by spaces.
+
+This script will update the specified repository in Prisma Cloud to scan only the branches you've listed. It's useful for focusing your scans on specific branches of interest, such as main development branches or feature branches.
