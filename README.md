@@ -36,9 +36,25 @@ In the above example, the script will return the list of changes (additions/dele
 
 ## set_prisma_repo_branches.py
 ### This script allows you to set specific branches for scanning in Prisma Cloud for a given repository
-- run the following using python (was tested using python version 3.12.3)\
-      `python set_prisma_repo_branches.py --repo-name <repository_name> --branches <branch1> <branch2> ...`
+This script interacts with the Prisma Cloud API to manage and monitor the scanned branches
+of repositories. It can perform the following operations:
 
-In the above example, replace `<repository_name>` with the name of your repository, and list the branches you want to set for scanning after the `--branches` argument. You can specify multiple branches separated by spaces.
+1. Scan and save the current branch information for all repositories.
+2. Set a new branch for scanning for all or selected repositories.
+3. Operate in interactive mode, prompting for confirmation before changing each repository's branch.
+4. Operate in scan-only mode, which will only scan and display the current branch information without making any changes.
 
-This script will update the specified repository in Prisma Cloud to scan only the branches you've listed. It's useful for focusing your scans on specific branches of interest, such as main development branches or feature branches.
+Usage:
+1. Scan only mode:
+   python set_prisma_repo_branches.py --scan-only
+
+2. Set branch 'main' for all repositories:
+   python set_prisma_repo_branches.py --branch main
+
+3. Set branch 'main' in interactive mode:
+   python set_prisma_repo_branches.py --branch main --interactive
+
+The script will create a timestamped JSON file with the current branch information
+for all repositories before making any changes.
+
+
