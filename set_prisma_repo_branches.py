@@ -179,5 +179,6 @@ def main():
                 print(f"Failed to set branch")
         print(f"\nTotal repositories processed: {len(repositories)}")
     else:
-        print("No repositories found or an error occurred.")if __name__ == "__main__":
+        print("No repositories found or an error occurred.")
+if __name__ == "__main__":
     main()
