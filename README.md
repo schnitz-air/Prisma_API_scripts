@@ -35,26 +35,20 @@ You can modify the number of days you'd like the script to scan for
 In the above example, the script will return the list of changes (additions/deletions/modifications) that it detected between the current state of pipeline-tools and between the last state which is saved in the `prisma_pipeline_state.json` file.
 
 ## set_prisma_repo_branches.py
-### This script allows you to set specific branches for scanning in Prisma Cloud for a given repository
-This script interacts with the Prisma Cloud API to manage and monitor the scanned branches
-of repositories. It can perform the following operations:
+### This script manages the scanned branches of repositories in Prisma Cloud. It can set a new branch for scanning for all repositories or a specific repository.
 
-1. Scan and save the current branch information for all repositories.
-2. Set a new branch for scanning for all or selected repositories.
-3. Operate in interactive mode, prompting for confirmation before changing each repository's branch.
-4. Operate in scan-only mode, which will only scan and display the current branch information without making any changes.
-
-Usage:
+Usage options:
 1. Scan only mode:
-   python set_prisma_repo_branches.py --scan-only
+   `python set_prisma_repo_branches.py --scan-only`
 
-2. Set branch 'main' for all repositories:
-   python set_prisma_repo_branches.py --branch main
+2. Set branch for all repositories:
+   `python set_prisma_repo_branches.py --branch main`
 
-3. Set branch 'main' in interactive mode:
-   python set_prisma_repo_branches.py --branch main --interactive
+3. Set branch in interactive mode:
+   `python set_prisma_repo_branches.py --branch main --interactive`
 
-The script will create a timestamped JSON file with the current branch information
-for all repositories before making any changes.
+4. Set branch for a specific repository:
+   `python set_prisma_repo_branches.py --repository <repository_name> --branch <branch_name>`
 
+The script will create a timestamped JSON file with the current branch information for all repositories before making any changes. It requires the PRISMA_API_URL, PRISMA_ACCESS_KEY, and PRISMA_SECRET_KEY environment variables to be set for authentication.
 

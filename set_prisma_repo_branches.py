@@ -68,7 +68,7 @@ def set_repository_branch(api_url, auth_token, repo_id, branch):
     api_url (str): The base URL for the Prisma Cloud API.
     auth_token (str): The authentication token for API requests.
     repo_id (str): The ID of the repository to update.
-    branch (str): The name of the branch to set for scanning.
+    branch (str): The name of the branch to set 
 
     Returns:
     bool: True if the branch was successfully set, False otherwise.
@@ -90,7 +90,7 @@ def set_repository_branch(api_url, auth_token, repo_id, branch):
 def save_repository_branches(repositories):
     """
     Save the repository information in the order: source, owner, defaultBranch.
-    Include the total number of repositories scanned.
+    Include the total number of repositories listed.
 
     Args:
     repositories (list): A list of dictionaries containing repository information.
@@ -121,9 +121,10 @@ def main():
     Main function to parse arguments and execute the script's functionality.
     """
     parser = argparse.ArgumentParser(description="Set the scanned branch for repositories in Prisma Cloud.")
-    parser.add_argument("--branch", type=str, help="Branch name to set for scanning")
+    parser.add_argument("--branch", type=str, help="Branch name to set for Prisma scanning")
     parser.add_argument("--interactive", action="store_true", help="Prompt for confirmation before changing each repository's branch")
     parser.add_argument("--scan-only", action="store_true", help="Only scan and save existing branches without making changes")
+    parser.add_argument("--repository", type=str, help="Specific repository to update")
     
     args = parser.parse_args()
 
@@ -142,6 +143,12 @@ def main():
     repositories = get_repositories(api_url, auth_token)
     
     if repositories:
+        if args.repository:
+            repositories = [repo for repo in repositories if repo['repository'] == args.repository]
+            if not repositories:
+                print(f"Repository '{args.repository}' not found.")
+                return
+        
         save_repository_branches(repositories)
         
         if args.scan_only:
@@ -172,6 +179,5 @@ def main():
                 print(f"Failed to set branch")
         print(f"\nTotal repositories processed: {len(repositories)}")
     else:
-        print("No repositories found or an error occurred.")
-if __name__ == "__main__":
+        print("No repositories found or an error occurred.")if __name__ == "__main__":
     main()
