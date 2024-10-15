@@ -1,40 +1,9 @@
-import requests
-import json
 import datetime
 import argparse
-import logging
 import os 
 from dateutil.parser import parse
 from get_prisma_token import get_auth_token
-
-def get_repositories(api_url, auth_token, last_scanned_before):
-    headers = {
-        'Accept': 'application/json',
-        "Authorization": f"Bearer {auth_token}"
-    }
-
-    payload = {
-        "data":{}
-    }
-
-    try:
-        logging.basicConfig(level=logging.DEBUG)
-        logging.debug(f"Request URL: {api_url}/code/api/v1/repositories")
-        logging.debug(f"Request Headers: {headers}")
-        logging.debug(f"Request Payload: {payload}")
-        response = requests.get(f"{api_url}/code/api/v1/repositories", headers=headers)
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.HTTPError as e:
-        if e.response.status_code == 403:
-            print(f"Error 403: Forbidden. Please check your API key and permissions.")
-            print(f"Response headers: {e.response.headers}")
-            print(f"Response body: {e.response.text}")
-        else:
-            print(f"HTTP Error {e.response.status_code}: {e.response.text}")
-    except requests.exceptions.RequestException as e:
-        print(f"Request Error: {e}")
-    return None
+from get_repo_scanned import get_repo_scanned
 
 def main():
     parser = argparse.ArgumentParser(description="List repositories in Prisma Cloud tenant last scanned before a given date.")
@@ -52,7 +21,7 @@ def main():
     auth_token = get_auth_token(api_url, username, password)
     
     last_scanned_before = datetime.datetime.now() - datetime.timedelta(days=args.days)
-    repositories = get_repositories(api_url, auth_token, last_scanned_before)
+    repositories = get_repo_scanned(api_url, auth_token)
     
     if repositories:
         print(f"Repositories last scanned before {last_scanned_before.date()}:")

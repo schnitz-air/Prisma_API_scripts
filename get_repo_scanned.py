@@ -18,3 +18,5 @@ if __name__ == "__main__":
     auth_token = get_auth_token(api_url, username, password)
     repositories = get_repo_scanned(api_url, auth_token)
     print(repositories)
+    print(f"\nTotal repositories found: {len(repositories)}")
+
