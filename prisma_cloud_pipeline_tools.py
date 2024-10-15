@@ -1,11 +1,11 @@
-import requests
 import json
 import datetime
 import argparse
-import logging
 import os 
 from dateutil.parser import parse
 from get_prisma_token import get_auth_token
+from get_pipeline_tools import get_pipeline_tools
+from get_repo_scanned import get_repo_scanned
 import sqlite3
 import time
 
@@ -49,40 +49,19 @@ def compare_states(previous_state, current_state):
     modified = [item for item in current_state if item in previous_state and current_state[item] != previous_state[item]]
     return added, removed, modified
 
-def get_pipeline_tools(api_url, auth_token):
-    headers = {
-        'Accept': 'application/json',
-        "Authorization": f"Bearer {auth_token}"
-    }
-
-    payload = {
-        "data":{}
-    }
-
-    try:
-        logging.basicConfig(level=logging.DEBUG)
-        logging.debug(f"Request URL: {api_url}/code/api/v1/ci-inventory")
-        logging.debug(f"Request Headers: {headers}")
-        logging.debug(f"Request Payload: {payload}")
-        response = requests.get(f"{api_url}/code/api/v1/ci-inventory", headers=headers)
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.HTTPError as e:
-        if e.response.status_code == 403:
-            print(f"Error 403: Forbidden. Please check your API key and permissions.")
-            print(f"Response headers: {e.response.headers}")
-            print(f"Response body: {e.response.text}")
-        else:
-            print(f"HTTP Error {e.response.status_code}: {e.response.text}")
-    except requests.exceptions.RequestException as e:
-        print(f"Request Error: {e}")
-    return None
+def match_repos_with_apps(repositories, pipelines):
+    repo_app_map = {repo['id']: {'name': repo['name'], 'apps': []} for repo in repositories}
+    for pipeline in pipelines:
+        cas_id = pipeline.get('casId')
+        if cas_id in repo_app_map:
+            repo_app_map[cas_id]['apps'].append(pipeline['appName'])
+    return repo_app_map
 
 def main():
     init_db()
     print(f"Database initialized at: {os.path.abspath(DATABASE_FILE)}")
     parser = argparse.ArgumentParser(description="List pipeline_tools in Prisma Cloud tenant last scanned before a given date.")
-    
+    parser.add_argument("--show", action="store_true", help="Show all repositories and their associated appNames")
     args = parser.parse_args()
 
     api_url = os.environ.get('PRISMA_API_URL')
@@ -95,35 +74,48 @@ def main():
     auth_token = get_auth_token(api_url, username, password)
     
     pipelines = get_pipeline_tools(api_url, auth_token)
-    
-    if pipelines:
-        for pipeline in pipelines:
-            print(pipeline)
+
+    if args.show:
+        repositories = get_repo_scanned(api_url, auth_token)
+        repo_app_map = match_repos_with_apps(repositories, pipelines)
+        
+        print("Repositories and their associated appNames:")
+        for repo_id, repo_data in repo_app_map.items():
+            print(f"\nRepository: {repo_data['name']} (ID: {repo_id})")
+            if repo_data['apps']:
+                for app in repo_data['apps']:
+                    print(f"  - {app}")
+            else:
+                print("  No associated appNames found")
     else:
-        print("No pipeline CI files were found or an error occurred.")
-    
-    current_state = {pipeline['appName']: pipeline for pipeline in pipelines}
-    save_state(current_state)
+        if pipelines:
+            for pipeline in pipelines:
+                print(pipeline)
+        else:
+            print("No pipeline CI files were found or an error occurred.")
+        
+        current_state = {pipeline['appName']: pipeline for pipeline in pipelines}
+        save_state(current_state)
 
-    previous_states = load_states()
+        previous_states = load_states()
 
-    for timestamp, state in previous_states.items():
-        print(f"\nChanges since {datetime.datetime.fromtimestamp(timestamp)}:")
-        added, removed, modified = compare_states(state, current_state)
+        for timestamp, state in previous_states.items():
+            print(f"\nChanges since {datetime.datetime.fromtimestamp(timestamp)}:")
+            added, removed, modified = compare_states(state, current_state)
 
-        print("Added pipelines:")
-        for pipeline in added:
-            print(f"  - {pipeline}")
+            print("Added pipelines:")
+            for pipeline in added:
+                print(f"  - {pipeline}")
 
-        print("\nRemoved pipelines:")
-        for pipeline in removed:
-            print(f"  - {pipeline}")
+            print("\nRemoved pipelines:")
+            for pipeline in removed:
+                print(f"  - {pipeline}")
 
-        print("\nModified pipelines:")
-        for pipeline in modified:
-            print(f"  - {pipeline}")
+            print("\nModified pipelines:")
+            for pipeline in modified:
+                print(f"  - {pipeline}")
 
-    cleanup_old_states()
+        cleanup_old_states()
 
 if __name__ == "__main__":
     main()
