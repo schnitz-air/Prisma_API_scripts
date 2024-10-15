@@ -33,32 +33,7 @@ import os
 import json
 from datetime import datetime
 from get_prisma_token import get_auth_token
-
-def get_repositories(api_url, auth_token):
-    """
-    Fetch all repositories from the Prisma Cloud API, excluding those with 'cli' in their source.
-
-    Args:
-    api_url (str): The base URL for the Prisma Cloud API.
-    auth_token (str): The authentication token for API requests.
-
-    Returns:
-    list: A list of dictionaries containing repository information, excluding 'cli' sources, or None if an error occurs.
-    """
-    headers = {
-        'Accept': 'application/json',
-        "Authorization": f"Bearer {auth_token}"
-    }
-
-    try:
-        response = requests.get(f"{api_url}/code/api/v1/repositories", headers=headers)
-        response.raise_for_status()
-        all_repos = response.json()
-        filtered_repos = [repo for repo in all_repos if 'cli' not in repo.get('source', '').lower()]
-        return filtered_repos
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching repositories: {e}")
-        return None
+from get_repo_scanned import get_repo_scanned
 
 def set_repository_branch(api_url, auth_token, repo_id, branch):
     """
@@ -140,7 +115,7 @@ def main():
 
     auth_token = get_auth_token(api_url, username, password)
     
-    repositories = get_repositories(api_url, auth_token)
+    repositories = get_repo_scanned(api_url, auth_token)
     
     if repositories:
         if args.repository:
@@ -180,5 +155,6 @@ def main():
         print(f"\nTotal repositories processed: {len(repositories)}")
     else:
         print("No repositories found or an error occurred.")
+
 if __name__ == "__main__":
     main()
