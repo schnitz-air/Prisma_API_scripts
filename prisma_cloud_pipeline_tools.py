@@ -6,42 +6,50 @@ import logging
 import os 
 from dateutil.parser import parse
 from get_prisma_token import get_auth_token
+import sqlite3
+import time
 
-# File to store the state of pipeline tools
-STATE_FILE = 'prisma_pipeline_state.json'
+DATABASE_FILE = 'prisma_pipeline_states.db'
 
-def load_state():
-    """
-    Load the previous state from the state file.
-    Returns an empty dict if the file doesn't exist.
-    """
-    if os.path.exists(STATE_FILE):
-        with open(STATE_FILE, 'r') as f:
-            return json.load(f)
-    return {}
+def init_db():
+    conn = sqlite3.connect(DATABASE_FILE)
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS states
+                 (timestamp INTEGER PRIMARY KEY, state TEXT)''')
+    conn.commit()
+    conn.close()
 
 def save_state(state):
-    """
-    Save the current state to the state file.
-    """
-    with open(STATE_FILE, 'w') as f:
-        json.dump(state, f)
+    conn = sqlite3.connect(DATABASE_FILE)
+    c = conn.cursor()
+    c.execute("INSERT INTO states VALUES (?, ?)", (int(time.time()), json.dumps(state)))
+    conn.commit()
+    conn.close()
+
+def load_states(days=7):
+    conn = sqlite3.connect(DATABASE_FILE)
+    c = conn.cursor()
+    timestamp = int(time.time()) - (days * 86400)
+    c.execute("SELECT * FROM states WHERE timestamp >= ? ORDER BY timestamp DESC", (timestamp,))
+    states = {row[0]: json.loads(row[1]) for row in c.fetchall()}
+    conn.close()
+    return states
+
+def cleanup_old_states(days=30):
+    conn = sqlite3.connect(DATABASE_FILE)
+    c = conn.cursor()
+    timestamp = int(time.time()) - (days * 86400)
+    c.execute("DELETE FROM states WHERE timestamp < ?", (timestamp,))
+    conn.commit()
+    conn.close()
 
 def compare_states(previous_state, current_state):
-    """
-    Compare the previous and current states to identify added, removed, and modified pipelines.
-    Returns three lists: added, removed, and modified items.
-    """
     added = [item for item in current_state if item not in previous_state]
     removed = [item for item in previous_state if item not in current_state]
     modified = [item for item in current_state if item in previous_state and current_state[item] != previous_state[item]]
     return added, removed, modified
 
 def get_pipeline_tools(api_url, auth_token):
-    """
-    Fetch pipeline tools from the Prisma Cloud API.
-    Returns the JSON response or None if an error occurs.
-    """
     headers = {
         'Accept': 'application/json',
         "Authorization": f"Bearer {auth_token}"
@@ -71,15 +79,12 @@ def get_pipeline_tools(api_url, auth_token):
     return None
 
 def main():
-    """
-    Main function to fetch pipeline tools, compare with previous state,
-    and display added, removed, and modified pipelines.
-    """
+    init_db()
+    print(f"Database initialized at: {os.path.abspath(DATABASE_FILE)}")
     parser = argparse.ArgumentParser(description="List pipeline_tools in Prisma Cloud tenant last scanned before a given date.")
     
     args = parser.parse_args()
 
-    # Get Prisma Cloud credentials from environment variables
     api_url = os.environ.get('PRISMA_API_URL')
     username = os.environ.get('PRISMA_ACCESS_KEY')
     password = os.environ.get('PRISMA_SECRET_KEY')
@@ -87,10 +92,8 @@ def main():
     if not all([api_url, username, password]):
         raise ValueError("One or more required environment variables are not set. Please set PRISMA_API_URL, PRISMA_ACCESS_KEY, and PRISMA_SECRET_KEY.")
 
-    # Get authentication token
     auth_token = get_auth_token(api_url, username, password)
     
-    # Fetch pipeline tools
     pipelines = get_pipeline_tools(api_url, auth_token)
     
     if pipelines:
@@ -99,28 +102,28 @@ def main():
     else:
         print("No pipeline CI files were found or an error occurred.")
     
-    # Load previous state and create current state
-    previous_state = load_state()
     current_state = {pipeline['appName']: pipeline for pipeline in pipelines}
-
-    # Compare states and get added, removed, and modified pipelines
-    added, removed, modified = compare_states(previous_state, current_state)
-
-    # Print results
-    print("Added pipelines:")
-    for pipeline in added:
-        print(f"  - {pipeline}")
-
-    print("\nRemoved pipelines:")
-    for pipeline in removed:
-        print(f"  - {pipeline}")
-
-    print("\nModified pipelines:")
-    for pipeline in modified:
-        print(f"  - {pipeline}")
-
-    # Save current state for future comparisons
     save_state(current_state)
+
+    previous_states = load_states()
+
+    for timestamp, state in previous_states.items():
+        print(f"\nChanges since {datetime.datetime.fromtimestamp(timestamp)}:")
+        added, removed, modified = compare_states(state, current_state)
+
+        print("Added pipelines:")
+        for pipeline in added:
+            print(f"  - {pipeline}")
+
+        print("\nRemoved pipelines:")
+        for pipeline in removed:
+            print(f"  - {pipeline}")
+
+        print("\nModified pipelines:")
+        for pipeline in modified:
+            print(f"  - {pipeline}")
+
+    cleanup_old_states()
 
 if __name__ == "__main__":
     main()
