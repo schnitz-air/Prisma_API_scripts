@@ -17,6 +17,7 @@ Bash example \
 `export PRISMA_ACCESS_KEY="your_access_key_here"` \
 `export PRISMA_SECRET_KEY="your_secret_key_here"` 
 
+Note: Additional details on creating access keys and setting up a Python environment can be found in the "Additional Resources" section below.
 
 ### How to use 
 - Clone the repo locally \
