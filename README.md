@@ -58,3 +58,13 @@ Usage options:
    `python set_prisma_repo_branches.py --repository <repository_name> --branch <branch_name>`
 
 The script will create a timestamped JSON file with the current branch information for all repositories before making any changes. It requires the PRISMA_API_URL, PRISMA_ACCESS_KEY, and PRISMA_SECRET_KEY environment variables to be set for authentication.
+
+## Additional Resources
+
+For more detailed information on specific actions, please refer to the following resources:
+
+- **Creating an Access Key and Secret Key**: Learn how to generate and manage your credentials by following the official Prisma Cloud documentation: [Create Access Keys](https://docs.prismacloud.io/en/enterprise-edition/content-collections/administration/create-access-keys)
+
+- **Setting up a Python Environment**: To create and manage a Python virtual environment, refer to the official Python documentation: [Creating Virtual Environments](https://docs.python.org/3/library/venv.html)
+
+These resources will provide you with step-by-step instructions to help you get started quickly and efficiently.
