@@ -12,7 +12,7 @@ Set the following as your environment variables:
 2. PRISMA_ACCESS_KEY
 3. PRISMA_SECRET_KEY
    
-Bash example 
+Bash example \
 export PRISMA_API_URL="https://api.prismacloud.io" \
 export PRISMA_ACCESS_KEY="your_access_key_here" \
 export PRISMA_SECRET_KEY="your_secret_key_here" 
