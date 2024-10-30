@@ -26,3 +26,6 @@ dist/
 # Local configuration files
 *.ini
 *.cfg
+
+#Local DB files 
+*.db 
