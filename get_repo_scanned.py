@@ -1,5 +1,6 @@
 import requests
-
+from get_prisma_token import get_auth_token
+import os
 def get_repo_scanned(api_url, auth_token):
     headers = {
         'Accept': 'application/json',
@@ -10,8 +11,7 @@ def get_repo_scanned(api_url, auth_token):
     return response.json()
 
 if __name__ == "__main__":
-    from get_prisma_token import get_auth_token
-    import os
+
     api_url = os.environ.get('PRISMA_API_URL')
     username = os.environ.get('PRISMA_ACCESS_KEY')
     password = os.environ.get('PRISMA_SECRET_KEY')

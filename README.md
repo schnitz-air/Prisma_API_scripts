@@ -30,39 +30,22 @@ Note: Additional details on creating access keys and setting up a Python environ
     `cd repositories_last_scanned\`
 - Choose the script you want to execute from the list below and follow specific instructions
 
-## prisma_cloud_repo_scanner.py 
-### This script gets the list of all repositories connected on a Prisma Cloud tenant and returns a list of repositories which were last scanned more than x days ago (x is a variable) 
-- Run the following using Python:\
-    `python prisma_cloud_repo_scanner.py --days 10`
+## Available Scripts
 
-In the above example, the script will return a list of all the repositories that haven't been scanned for the last 10 days or more. \
-You can modify the number of days you'd like the script to scan for 
+### 1. Set Scanned Branch
+Manages the scanned branches of repositories in Prisma Cloud.
+[Read more about set_scanned_branch.py](set_scanned_branch/README.md)
+### 2. Get Pipeline Tools
+Monitors changes in pipeline tools on a Prisma Cloud tenant.
+[Read more about prisma_cloud_pipeline_tools.py](get_pipeline_tools/README.md)
 
-## prisma_cloud_pipeline_tools.py 
-### This script gets the list of all pipeline-tools on a Prisma Cloud tenant and stores it in a status file. 
-### It then compares that with the last scan and returns a list of changes (additions/deletions/modifications) that occurred.  
-- Run the following using Python:\
-      `python prisma_cloud_pipeline_tools.py`
+### 3. Prisma Cloud Repository Scanner
+Lists repositories that haven't been scanned recently.
+[Read more about prisma_cloud_repo_scanner.py](get_repo_last_scanned/README.md)
 
-In the above example, the script will return the list of changes (additions/deletions/modifications) that it detected between the current state of pipeline-tools and between the last state which is saved in the `prisma_pipeline_state.json` file.
-
-## set_prisma_repo_branches.py
-### This script manages the scanned branches of repositories in Prisma Cloud. It can set a new branch for scanning for all repositories or a specific repository.
-
-Usage options:
-1. Scan only mode:
-   `python set_prisma_repo_branches.py --scan-only`
-
-2. Set branch for all repositories:
-   `python set_prisma_repo_branches.py --branch main`
-
-3. Set branch in interactive mode:
-   `python set_prisma_repo_branches.py --branch main --interactive`
-
-4. Set branch for a specific repository:
-   `python set_prisma_repo_branches.py --repository <repository_name> --branch <branch_name>`
-
-The script will create a timestamped JSON file with the current branch information for all repositories before making any changes. It requires the PRISMA_API_URL, PRISMA_ACCESS_KEY, and PRISMA_SECRET_KEY environment variables to be set for authentication.
+### 4. Get Suppression Rules
+Retrieves and displays suppression rules from Prisma Cloud.
+[Read more about get_suppression_rules.py](get_suppression_rules/README.md)
 
 ## Additional Resources
 
