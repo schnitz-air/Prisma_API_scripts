@@ -50,7 +50,7 @@ Retrieves and displays suppression rules from Prisma Cloud.
 
 ### 5. Get Tags
 Retrieves and displays tag rules from Prisma Cloud.
-[Read more about get_tags.py](docs/get_tags.md)
+[Read more about get_tags.py](docs/get_tags/get_tags.md)
 ## Additional Resources
 
 For more detailed information on specific actions, please refer to the following resources:
