@@ -38,11 +38,11 @@ Manages the scanned branches of repositories in Prisma Cloud.
 
 ### 2. Prisma Cloud Pipeline Tools
 Monitors changes in pipeline tools on a Prisma Cloud tenant.
-[Read more about prisma_cloud_pipeline_tools.py](docs/get_pipeline_tools.md)
+[Read more about get_pipeline_tools.py](docs/get_pipeline_tools.md)
 
 ### 3. Prisma Cloud Repository Scanner
 Lists repositories that haven't been scanned recently.
-[Read more about prisma_cloud_repo_scanner.py](docs/get_repo_last_scanned.md)
+[Read more about get_repo_last_scanner.py](docs/get_repo_last_scanned.md)
 
 ### 4. Get Suppression Rules
 Retrieves and displays suppression rules from Prisma Cloud.
