@@ -5,7 +5,7 @@ import os
 from dateutil.parser import parse
 from get_prisma_token import get_auth_token
 from get_pipeline_tools import get_pipeline_tools
-from get_repo_scanned import get_repo_scanned
+from get_repo import get_repo_scanned
 import sqlite3
 import time
 
