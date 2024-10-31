@@ -1,6 +1,6 @@
 import requests
 import os
-from utils.get_prisma_token import get_auth_token
+from get_prisma_token import get_auth_token
 
 def get_suppression_rules(api_url, auth_token):
     headers = {
