@@ -1,6 +1,10 @@
 # Prisma_API_scripts
 A collection of Python scripts that uses Prisma Cloud API to perform useful actions
 
+# Community Supported
+The templates/scripts in this repo are released under an as-is, best effort, support policy. These scripts should be seen as community supported and not as an official Palo Alto Networks solution. 
+All code in this repo is provided without support or warranty from Palo Alto Networks. Please review code used from this repo prior to use in your environment.
+
 ## Prerequisites 
 Before starting to use this collection, make sure you have:
 - A valid Prisma Cloud tenant
