@@ -32,7 +32,7 @@ def get_pipeline_tools(api_url, auth_token):
     return None
 
 if __name__ == "__main__":
-    from get_prisma_token import get_auth_token
+    from utils.get_prisma_token import get_auth_token
     api_url = os.environ.get('PRISMA_API_URL')
     username = os.environ.get('PRISMA_ACCESS_KEY')
     password = os.environ.get('PRISMA_SECRET_KEY')

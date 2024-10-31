@@ -2,7 +2,7 @@ import requests
 import os
 import argparse
 import json
-from get_prisma_token import get_auth_token
+from utils.get_prisma_token import get_auth_token
 
 def get_tags(api_url, auth_token, tag_type=None, repo_id=None, file_path=None):
     headers = {

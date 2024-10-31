@@ -1,5 +1,5 @@
 import requests
-from get_prisma_token import get_auth_token
+from utils.get_prisma_token import get_auth_token
 import os
 def get_repo_scanned(api_url, auth_token):
     headers = {
