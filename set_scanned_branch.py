@@ -33,7 +33,7 @@ import os
 import json
 from datetime import datetime
 from get_prisma_token import get_auth_token
-from get_repo_scanned import get_repo_scanned
+from get_repo import get_repo_scanned
 
 def set_repository_branch(api_url, auth_token, repo_id, branch):
     """

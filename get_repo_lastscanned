@@ -3,7 +3,7 @@ import argparse
 import os 
 from dateutil.parser import parse
 from get_prisma_token import get_auth_token
-from get_repo_scanned import get_repo_scanned
+from get_repo import get_repo_scanned
 
 def main():
     parser = argparse.ArgumentParser(description="List repositories in Prisma Cloud tenant last scanned before a given date.")
