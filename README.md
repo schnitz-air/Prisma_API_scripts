@@ -1,4 +1,4 @@
-# Prisma_API_scripts
+# Prisma API scripts
 A collection of Python scripts that uses Prisma Cloud API to perform useful actions
 
 # Community Supported
