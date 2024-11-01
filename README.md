@@ -32,23 +32,23 @@ Note: Additional details on creating access keys and setting up a Python environ
 
 ## Available Scripts
 
-### 1. Set Scanned Branch
+### 1. Set Scanned Branch (set_scanned_branch.py)
 Manages the scanned branches of repositories in Prisma Cloud.
 [Read more about set_scanned_branch.py](docs/set_scanned_branch.md)
 
-### 2. Prisma Cloud Pipeline Tools
+### 2. Prisma Cloud Pipeline Tools (get_pipeline_tools_changes.py)
 Monitors changes in pipeline tools on a Prisma Cloud tenant.
 [Read more about get_pipeline_tools.py](docs/get_pipeline_tools.md)
 
-### 3. Prisma Cloud Repository Scanner
+### 3. Prisma Cloud Repository Scanner (set_scanned_branch.py)
 Lists repositories that haven't been scanned recently.
 [Read more about get_repo_last_scanner.py](docs/get_repo_last_scanned.md)
 
-### 4. Get Suppression Rules
+### 4. Get Suppression Rules (/utils/get_suppression_rules.py)
 Retrieves and displays suppression rules from Prisma Cloud.
 [Read more about get_suppression_rules.py](docs/get_supression_rules.md)
 
-### 5. Get Tags
+### 5. Get Tags (utils/get_tags.py)
 Retrieves and displays tag rules from Prisma Cloud.
 [Read more about get_tags.py](docs/get_tags.md)
 ## Additional Resources
