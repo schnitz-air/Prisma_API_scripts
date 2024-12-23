@@ -1,0 +1,24 @@
+# Repository List Template
+# Enter one repository per line in the format appropriate for your selected repository type
+# Examples:
+# For GitHub: owner/repo
+# For GitLab: group/project
+# For Azure DevOps: project/repo
+# For Bitbucket: workspace/repo_slug
+
+# Azure DevOps examples:
+#Organization/Project/Repository
+#Organization/Project/Repository2 
+
+# GitHub examples:
+#github-org/repo1
+#github-org/repo2
+
+# GitLab examples:
+#gitlab-group/project1
+#gitlab-group/project2
+
+# Bitbucket examples:
+#bitbucket-workspace/repo_slug1
+#bitbucket-workspace/repo_slug2
+
