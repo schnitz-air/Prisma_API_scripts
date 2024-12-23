@@ -49,5 +49,3 @@ The script logs its actions to `PrismaCloudScript.log` in the same directory.
 - Check the log file for detailed error messages if the script fails.
 - Verify that the repository list file is correctly formatted and accessible.
 
-## Support
-For any issues or questions, please contact your Prisma Cloud support representative.
